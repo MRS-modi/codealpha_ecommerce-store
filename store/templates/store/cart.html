@@ -1,0 +1,69 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h2 class="mb-4 fw-bold">🛒 Your Shopping Cart</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm mb-3">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
+                                {% endif %}
+                                <span class="fw-semibold">{{ item.product.name }}</span>
+                            </div>
+                        </td>
+                        <td>₹{{ item.product.price }}</td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'update_quantity' item.id 'remove' %}" class="btn btn-outline-secondary">-</a>
+                                <span class="btn btn-light disabled px-3 text-dark fw-bold">{{ item.quantity }}</span>
+                                <a href="{% url 'update_quantity' item.id 'add' %}" class="btn btn-outline-secondary">+</a>
+                            </div>
+                        </td>
+                        <td><strong>₹{{ item.get_total }}</strong></td>
+                        <td>
+                            <a href="{% url 'update_quantity' item.id 'delete' %}" class="btn btn-sm btn-outline-danger">🗑️ Remove</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">Your cart is empty. <a href="{% url 'store' %}">Go Shopping</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{% url 'store' %}" class="btn btn-outline-dark">← Continue Shopping</a>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4 shadow-sm border-0 bg-white">
+            <h4 class="fw-bold mb-3">Order Summary</h4>
+            <hr>
+            <p class="d-flex justify-content-between"><span>Total Items:</span> <strong>{{ order.get_cart_items|default:0 }}</strong></p>
+            <p class="d-flex justify-content-between"><span>Total Amount:</span> <strong class="fs-4 text-success">₹{{ order.get_cart_total|default:0 }}</strong></p>
+            
+            {% if items %}
+                <a href="{% url 'checkout' %}" class="btn btn-success w-100 mt-3 btn-lg fw-semibold">Proceed to Checkout →</a>
+            {% else %}
+                <button class="btn btn-secondary w-100 mt-3 btn-lg" disabled>Proceed to Checkout</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

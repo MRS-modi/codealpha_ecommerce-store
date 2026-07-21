@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-4 p-4 p-md-5 shadow-sm border border-light">
+    <div class="row align-items-center g-4">
+        <!-- Image Container -->
+        <div class="col-md-6 text-center bg-light rounded-4 p-4" style="min-height: 350px;">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid rounded-3" alt="{{ product.name }}" style="max-height: 350px; object-fit: contain;">
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 text-muted py-5">
+                    <i class="bi bi-image display-1"></i>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Details Container -->
+        <div class="col-md-6 ps-md-5">
+            <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2 rounded-pill mb-3">In Stock ({{ product.stock }} units)</span>
+            <h1 class="fw-bold mb-3">{{ product.name }}</h1>
+            <div class="fs-2 fw-bold text-dark mb-4">₹{{ product.price }}</div>
+            
+            <p class="text-secondary mb-4 leading-relaxed">{{ product.description|default:"Detailed description coming soon." }}</p>
+
+            <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                <a href="{% url 'store' %}" class="btn btn-outline-secondary px-4 py-2 rounded-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-brand px-4 py-2 rounded-3 fs-6 d-flex align-items-center gap-2">
+                    <i class="bi bi-cart-plus-fill"></i> Add to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
